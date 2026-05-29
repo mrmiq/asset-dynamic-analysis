@@ -3,11 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Asset Dynamic</title>
+    <title>Dynamic Asset</title>
+    <link rel="icon" href="image/A.ico.PNG">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --red: #ef4444; --green: #22c55e; --bg: #000; }
-        body { background-color: var(--bg); color: #fff; font-family: -apple-system, system-ui, sans-serif; height: 100vh; margin: 0; overflow: hidden; display: flex; flex-direction: column; }
+        
+        body { 
+            background-color: var(--bg); 
+            color: #fff; 
+            font-family: -apple-system, system-ui, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
         
         .glass { 
             background: rgba(18, 18, 18, 0.8); 
@@ -16,84 +28,180 @@
             border: 1px solid rgba(255, 255, 255, 0.08); 
         }
 
-        #canvasContainer { flex: 1; position: relative; width: 100%; margin-top: 10px; }
+        #canvasContainer { 
+            position: relative; 
+            width: 100%; 
+            height: 40vh; 
+            min-height: 260px;
+            margin: 10px 0;
+        }
         canvas { display: block; touch-action: none; width: 100%; height: 100%; }
 
-        /* 双滑块样式逻辑 */
-        .range-slider { position: relative; height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 10px 0; }
-        .range-slider .progress { position: absolute; height: 100%; background: #3b82f6; border-radius: 5px; }
-        .range-input { position: relative; }
-        .range-input input { position: absolute; top: -15px; width: 100%; height: 10px; background: none; pointer-events: none; -webkit-appearance: none; }
-        input[type="range"]::-webkit-slider-thumb { height: 18px; width: 18px; border-radius: 50%; background: #fff; pointer-events: auto; -webkit-appearance: none; cursor: pointer; border: 2px solid #3b82f6; }
+        .range-slider { position: relative; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin: 24px 0 12px 0; }
+        .range-slider .progress { position: absolute; height: 100%; background: #3b82f6; border-radius: 4px; }
+        .range-input { position: relative; z-index: 10; }
         
-        #progressRange { -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px; width: 100%; }
-        #progressRange::-webkit-slider-thumb { -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%; background: #3b82f6; cursor: pointer; }
+        .range-input input { 
+            position: absolute; 
+            top: -16px; 
+            width: 100%; 
+            height: 40px; 
+            background: none; 
+            pointer-events: none; 
+            -webkit-appearance: none; 
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb { 
+            height: 32px; 
+            width: 24px; 
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32' width='24' height='32'%3E%3Cfilter id='sh' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeDropShadow dx='0' dy='1.5' stdDeviation='1.2' flood-color='%23000000' flood-opacity='0.5' /%3E%3C/filter%3E%3Cpath d='M 12 28 C 17 20, 22 15, 22 10 A 10 10 0 1 0 2 10 C 2 15, 7 20, 12 28 Z' fill='%233b82f6' stroke='%23000000' stroke-width='1.8' stroke-linejoin='round' filter='url(%23sh)' /%3E%3Ccircle cx='12' cy='10' r='2.5' fill='%23000000' /%3E%3C/svg%3E") no-repeat center;
+            pointer-events: auto; 
+            -webkit-appearance: none; 
+            cursor: pointer; 
+            border: none;
+            transform: translateY(-20px);
+            transition: transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        input[type="range"]::-moz-range-thumb { 
+            height: 32px; 
+            width: 24px; 
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32' width='24' height='32'%3E%3Cfilter id='sh' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeDropShadow dx='0' dy='1.5' stdDeviation='1.2' flood-color='%23000000' flood-opacity='0.5' /%3E%3C/filter%3E%3Cpath d='M 12 28 C 17 20, 22 15, 22 10 A 10 10 0 1 0 2 10 C 2 15, 7 20, 12 28 Z' fill='%233b82f6' stroke='%23000000' stroke-width='1.8' stroke-linejoin='round' filter='url(%23sh)' /%3E%3Ccircle cx='12' cy='10' r='2.5' fill='%23000000' /%3E%3C/svg%3E") no-repeat center;
+            pointer-events: auto; 
+            cursor: pointer; 
+            border: none;
+            transform: translateY(-20px);
+            transition: transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        input[type="range"]:active::-webkit-slider-thumb {
+            transform: translateY(-23px) scale(1.12);
+        }
+        input[type="range"]:active::-moz-range-thumb {
+            transform: translateY(-23px) scale(1.12);
+        }
+        
+        #progressRange { 
+            -webkit-appearance: none; 
+            width: 100%; 
+            height: 40px; 
+            background: transparent; 
+            outline: none; 
+            touch-action: none; 
+            margin-top: 10px; 
+            margin-bottom: 4px;
+        }
+        #progressRange::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        #progressRange::-moz-range-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+        #progressRange::-webkit-slider-thumb { 
+            -webkit-appearance: none; 
+            appearance: none;
+            height: 32px; 
+            width: 24px; 
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32' width='24' height='32'%3E%3Cfilter id='sh' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeDropShadow dx='0' dy='1.5' stdDeviation='1.2' flood-color='%23000000' flood-opacity='0.5' /%3E%3C/filter%3E%3Cpath d='M 12 28 C 17 20, 22 15, 22 10 A 10 10 0 1 0 2 10 C 2 15, 7 20, 12 28 Z' fill='%233b82f6' stroke='%23000000' stroke-width='1.8' stroke-linejoin='round' filter='url(%23sh)' /%3E%3Ccircle cx='12' cy='10' r='2.5' fill='%23000000' /%3E%3C/svg%3E") no-repeat center;
+            cursor: pointer; 
+            border: none; 
+            transform: translateY(-19px);
+            transition: transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        #progressRange::-moz-range-thumb { 
+            height: 32px; 
+            width: 24px; 
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 32' width='24' height='32'%3E%3Cfilter id='sh' x='-30%25' y='-30%25' width='160%25' height='160%25'%3E%3CfeDropShadow dx='0' dy='1.5' stdDeviation='1.2' flood-color='%23000000' flood-opacity='0.5' /%3E%3C/filter%3E%3Cpath d='M 12 28 C 17 20, 22 15, 22 10 A 10 10 0 1 0 2 10 C 2 15, 7 20, 12 28 Z' fill='%233b82f6' stroke='%23000000' stroke-width='1.8' stroke-linejoin='round' filter='url(%23sh)' /%3E%3Ccircle cx='12' cy='10' r='2.5' fill='%23000000' /%3E%3C/svg%3E") no-repeat center;
+            cursor: pointer; 
+            border: none; 
+            transform: translateY(-19px);
+            transition: transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        #progressRange:active::-webkit-slider-thumb {
+            transform: translateY(-22px) scale(1.12);
+        }
+        #progressRange:active::-moz-range-thumb {
+            transform: translateY(-22px) scale(1.12);
+        }
+
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
     </style>
 </head>
-<body class="flex flex-col">
+<body>
 
-    <!-- 欢迎与上传界面 -->
     <div id="welcome" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-500">
         <div class="text-center p-8 max-w-sm">
             <div class="mb-6 inline-flex p-6 bg-white/5 rounded-3xl border border-white/10">
                 <svg class="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
             </div>
-            <h1 class="text-2xl font-black italic mb-2 tracking-tighter text-white">ASSET DYNAMIC</h1>
-            <p class="text-zinc-500 text-[15px] mb-8 tracking-[0.3em] uppercase">数据分析引擎</p>
+            <h1 class="text-2xl font-black italic mb-2 tracking-tighter text-white uppercase">Dynamic Asset</h1>
+            <p class="text-zinc-500 text-[15px] mb-8 tracking-[0.3em] uppercase">随手记流水动态图</p>
             <label class="block w-full bg-blue-600 py-4 rounded-2xl font-bold cursor-pointer hover:bg-blue-500 active:scale-95 transition-all text-center shadow-xl text-white">
-                加载流水
+                Load
                 <input type="file" id="csvInputFirst" class="hidden csv-input-trigger" accept=".csv">
             </label>
         </div>
     </div>
 
-    <!-- 主应用界面 -->
-    <div id="app" class="hidden flex-1 flex flex-col opacity-0 transition-opacity duration-700">
+    <div id="app" class="hidden w-full flex-1 flex flex-col opacity-0 transition-opacity duration-700 pb-safe">
         
-        <!-- 响应式数据顶栏 -->
-        <header class="p-4 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-4 relative">
-            <div class="glass p-3 rounded-2xl flex flex-col justify-center">
-                <label class="w-full h-full flex flex-col items-center justify-center cursor-pointer hover:bg-white/5 transition-colors rounded-xl">
-				<span class="text-[15px] font-black text-blue-500 uppercase tracking-widest">当前日期</span>
-                <span id="txtDate" class="text-lg font-mono font-black">----/--/--</span>
-				</label>
+        <header class="p-3 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-2 md:gap-4">
+            <div class="glass p-2 md:p-3 rounded-xl md:rounded-2xl flex flex-col justify-center">
+                <div class="w-full h-full flex flex-col items-center justify-center text-center">
+                    <span class="text-[12px] md:text-[15px] font-black text-blue-500 uppercase tracking-widest">当前日期</span>
+                    <span id="txtDate" class="text-base md:text-lg font-mono font-black">----/--/--</span>
+                </div>
             </div>
             
-            <div class="glass p-3 rounded-2xl border-blue-500/20 flex flex-col justify-center items-center md:items-start relative col-span-1 md:col-span-2">
-                <label class="w-full h-full flex flex-col items-center justify-center cursor-pointer hover:bg-white/5 transition-colors rounded-xl">
-				<div class="flex items-center gap-2 w-full justify-between">
-                   <label class="w-full h-full flex flex-col items-center justify-center cursor-pointer hover:bg-white/5 transition-colors rounded-xl">
-					<span class="text-[15px] font-black text-blue-500 uppercase tracking-widest">实时资产净值</span>
-                    </label>
+            <div class="glass p-2 md:p-3 rounded-xl md:rounded-2xl border-blue-500/20 flex flex-col justify-center items-center col-span-1 md:col-span-2">
+                <div class="w-full h-full flex flex-col items-center justify-center text-center">
+                    <span class="text-[12px] md:text-[15px] font-black text-blue-500 uppercase tracking-widest">实时资产净值</span>
+                    <div class="flex flex-row md:flex-col items-center gap-2 md:gap-0">
+                        <span id="txtWorth" class="text-xl md:text-3xl font-mono font-black tracking-tighter">¥ 0.00</span>
+                        <span id="txtDiff" class="text-sm md:text-xl font-mono font-bold opacity-80">+0.00</span>
+                    </div>
                 </div>
-                <span id="txtWorth" class="text-3xl font-mono font-black tracking-tighter">¥ 0.00</span>
-				<span id="percentChange" class="text-xl font-bold"></span>
-				 </label>
             </div>
 
-            <div class="glass p-3 rounded-2xl flex flex-col justify-center items-center">
-                <label class="w-full h-full flex flex-col items-center justify-center cursor-pointer hover:bg-white/5 transition-colors rounded-xl">
-                    <span class="text-[15px] font-black text-blue-500 uppercase tracking-widest mb-1">导入数据</span>
-                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            <div class="glass p-2 md:p-3 rounded-xl md:rounded-2xl flex flex-col justify-center items-center">
+                <label class="w-full h-full flex flex-row md:flex-col items-center justify-center gap-2 md:gap-1 cursor-pointer hover:bg-white/5 transition-colors rounded-xl text-center">
+                    <span class="text-[12px] md:text-[15px] font-black text-blue-500 uppercase tracking-widest">导入数据</span>
+                    <svg class="w-4 h-4 md:w-6 md:h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                     <input type="file" id="csvInputRepeat" class="hidden csv-input-trigger" accept=".csv">
                 </label>
             </div>
+
+            <div class="flex justify-center gap-2 py-2 col-span-1 md:col-span-4">
+                <button onclick="changeMode('daily')" data-mode="daily" class="dimension-btn px-4 py-1.5 text-xs bg-blue-600 rounded-xl font-bold transition-all">每日</button>
+                <button onclick="changeMode('monthly')" data-mode="monthly" class="dimension-btn px-4 py-1.5 text-xs bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-all">每月</button>
+                <button onclick="changeMode('yearly')" data-mode="yearly" class="dimension-btn px-4 py-1.5 text-xs bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-all">每年</button>
+            </div>
         </header>
 
-        <!-- 画布绘图区 -->
         <div id="canvasContainer">
             <canvas id="mainCanvas"></canvas>
             <div id="tooltip" class="absolute pointer-events-none hidden glass px-3 py-2 rounded-lg border-white/20 text-[10px] font-mono z-30"></div>
         </div>
 
-        <!-- 底部控制面板 -->
-        <footer class="p-6 md:p-8 bg-zinc-900/40 border-t border-white/5 backdrop-blur-md">
-            <div class="max-w-6xl mx-auto space-y-6">
-                <!-- 时间段选择器 -->
+        <footer class="p-4 md:p-6 bg-zinc-900/90 border-t border-white/5 mt-auto">
+            <div class="max-w-6xl mx-auto space-y-4">
+                
                 <div class="flex flex-col gap-2">
-                    <div class="flex justify-between items-center px-1">
-                        <span class="text-[15px] font-bold text-zinc-400">时间段筛选：<span id="rangeDisplay" class="text-blue-400">全时段</span></span>
-                        <span class="text-[15px] text-zinc-600 uppercase">滑动两端调整视角</span>
+                    <div class="flex flex-col sm:flex-row justify-center items-center px-1 gap-2">
+                        <div class="flex items-center gap-2 text-xs w-full sm:w-auto justify-center">
+                            <input type="date" id="inputStartDate" class="bg-zinc-800 text-white border border-zinc-700/80 rounded-lg px-2.5 py-1 text-[11px] focus:outline-none focus:border-blue-500 w-full sm:w-auto text-center">
+                            <span class="text-zinc-500 text-[10px] flex-shrink-0">至</span>
+                            <input type="date" id="inputEndDate" class="bg-zinc-800 text-white border border-zinc-700/80 rounded-lg px-2.5 py-1 text-[11px] focus:outline-none focus:border-blue-500 w-full sm:w-auto text-center">
+                        </div>
                     </div>
                     <div class="range-slider">
                         <div id="rangeProgress" class="progress" style="left:0%; right:0%;"></div>
@@ -104,28 +212,32 @@
                     </div>
                 </div>
 
-                <div class="flex items-center gap-6">
-                    <button id="btnPlay" class="w-12 h-12 bg-white text-black rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all">
-                        <svg id="playIcon" class="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3L15.5 10L4.5 17V3Z"/></svg>
+                <div class="flex items-center gap-4 py-1">
+                    <button id="btnPlay" class="w-10 h-10 md:w-12 md:h-12 bg-white text-black rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all flex-shrink-0 z-20">
+                        <svg id="playIcon" class="w-4 h-4 md:w-5 md:h-5 ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3L15.5 10L4.5 17V3Z"/></svg>
                     </button>
                     
-                    <div class="flex-1 flex flex-col gap-3">
+                    <div class="flex-1 flex flex-col gap-1">
                         <input type="range" id="progressRange" value="0">
-                        <div class="flex justify-between text-[15px] font-black text-zinc-500 tracking-tighter uppercase">
+                        <div class="flex justify-between text-[11px] md:text-[12px] font-bold text-zinc-500 font-mono">
                             <span id="dateStart">START</span>
-                            <span id="currentSelectionInfo" class="text-blue-500/50 text-[15px]">正在查看选定区间</span>
                             <span id="dateEnd">END</span>
                         </div>
                     </div>
                 </div>
+
+              
             </div>
         </footer>
     </div>
 
     <script>
-        let rawHistory = [];    // 原始完整数据
-        let viewHistory = [];   // 当前视角（筛选后）的数据
-        let cursor = 0;         // 在 viewHistory 中的指针
+        // 全局状态管理
+        let currentMode = 'daily'; 
+        let displayHistory = [];   
+        let rawHistory = [];
+        let viewHistory = [];
+        let cursor = 0;
         let isPlaying = false;
         let hoverIdx = -1;
 
@@ -133,7 +245,54 @@
         const ctx = canvas.getContext('2d');
         const container = document.getElementById('canvasContainer');
 
+        const inputStartDate = document.getElementById('inputStartDate');
+        const inputEndDate = document.getElementById('inputEndDate');
+
+        function toStandardDateStr(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split(/[\.\-\/]/);
+            if (parts.length === 3) {
+                return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+            }
+            return dateStr;
+        }
+
+        function findClosestIndex(targetDateStr) {
+            if (!displayHistory.length) return 0;
+            const targetStandard = toStandardDateStr(targetDateStr);
+            const targetTime = new Date(targetStandard).getTime();
+            if (isNaN(targetTime)) return 0;
+
+            let closestIdx = 0;
+            let minDiff = Infinity;
+
+            for (let i = 0; i < displayHistory.length; i++) {
+                let curDate = displayHistory[i].date;
+                if (curDate.length === 7) curDate += "-01";
+                if (curDate.length === 4) curDate += "-01-01";
+                const currentStandard = toStandardDateStr(curDate);
+                const currentTime = new Date(currentStandard).getTime();
+                if (isNaN(currentTime)) continue;
+
+                const diff = Math.abs(currentTime - targetTime);
+                if (diff < minDiff) {
+                    minDiff = diff;
+                    closestIdx = i;
+                }
+            }
+            return closestIdx;
+        }
+
         function resize() {
+            if (window.innerWidth < 768) {
+                const headerEl = document.querySelector('header');
+                const headerHeight = headerEl ? headerEl.clientHeight : 100;
+                const availableHeight = window.innerHeight - headerHeight - 280;
+                container.style.height = Math.max(250, availableHeight) + 'px';
+            } else {
+                container.style.height = '';
+            }
+
             const dpr = window.devicePixelRatio || 1;
             canvas.width = container.clientWidth * dpr;
             canvas.height = container.clientHeight * dpr;
@@ -141,7 +300,6 @@
         }
         window.addEventListener('resize', resize);
 
-        // 处理文件导入
         document.querySelectorAll('.csv-input-trigger').forEach(input => {
             input.addEventListener('change', function(e) {
                 const file = e.target.files[0];
@@ -150,15 +308,17 @@
                 reader.onload = (ev) => {
                     if(parse(ev.target.result)) {
                         initRange();
-                        updateView();
+                        changeMode('daily'); 
                         const welcome = document.getElementById('welcome');
                         if(!welcome.classList.contains('pointer-events-none')) {
                             welcome.classList.add('opacity-0', 'pointer-events-none');
                             document.getElementById('app').classList.remove('hidden');
-                            setTimeout(() => { document.getElementById('app').classList.add('opacity-100'); resize(); }, 50);
-                        } else {
-                            resize();
-                        }
+                            setTimeout(() => { 
+                                document.getElementById('app').classList.add('opacity-100'); 
+                                resize(); 
+                                window.scrollTo(0, 0);
+                            }, 50);
+                        } else { resize(); }
                     }
                     e.target.value = '';
                 };
@@ -204,15 +364,50 @@
             return true;
         }
 
-        // 初始化范围滑块
-        function initRange() {
+        function getAggregatedData(mode) {
+            if (mode === 'daily') return rawHistory;
+
+            const map = {};
+            rawHistory.forEach(item => {
+                const key = mode === 'monthly' ? item.date.substring(0, 7) : item.date.substring(0, 4);
+                map[key] = item.val; 
+            });
+
+            return Object.keys(map).sort().map(k => ({ date: k, val: map[k] }));
+        }
+
+        function changeMode(mode) {
+            currentMode = mode;
+            toggle(false); // 切换维度时停止播放
+            
+            document.querySelectorAll('.dimension-btn').forEach(btn => {
+                btn.classList.toggle('bg-blue-600', btn.dataset.mode === mode);
+                btn.classList.toggle('bg-white/10', btn.dataset.mode !== mode);
+            });
+
+            displayHistory = getAggregatedData(mode);
+            
             const minIn = document.getElementById('minRange');
             const maxIn = document.getElementById('maxRange');
-            minIn.max = rawHistory.length - 1;
-            maxIn.max = rawHistory.length - 1;
+            minIn.max = displayHistory.length - 1;
+            maxIn.max = displayHistory.length - 1;
             minIn.value = 0;
-            maxIn.value = rawHistory.length - 1;
-            updateRangeUI();
+            maxIn.value = displayHistory.length - 1;
+
+            updateView();
+        }
+
+        function initRange() {
+            const firstDateStandard = toStandardDateStr(rawHistory[0].date);
+            const lastDateStandard = toStandardDateStr(rawHistory[rawHistory.length - 1].date);
+            
+            inputStartDate.min = firstDateStandard;
+            inputStartDate.max = lastDateStandard;
+            inputEndDate.min = firstDateStandard;
+            inputEndDate.max = lastDateStandard;
+
+            inputStartDate.value = firstDateStandard;
+            inputEndDate.value = lastDateStandard;
         }
 
         function updateRangeUI() {
@@ -220,11 +415,18 @@
             const maxIn = document.getElementById('maxRange');
             const progress = document.getElementById('rangeProgress');
             
-            // 确保不交叉
-            if(parseInt(minIn.value) > parseInt(maxIn.value)) {
-                let temp = minIn.value;
-                minIn.value = maxIn.value;
-                maxIn.value = temp;
+            let minVal = parseInt(minIn.value);
+            let maxVal = parseInt(maxIn.value);
+            const minGap = 1;
+
+            if (maxVal - minVal < minGap) {
+                if (document.activeElement === minIn) {
+                    minIn.value = maxVal - minGap;
+                } else {
+                    maxIn.value = minVal + minGap;
+                }
+                minVal = parseInt(minIn.value);
+                maxVal = parseInt(maxIn.value);
             }
 
             const left = (minIn.value / minIn.max) * 100;
@@ -232,21 +434,60 @@
             progress.style.left = left + "%";
             progress.style.right = right + "%";
 
-            document.getElementById('rangeDisplay').innerText = `${rawHistory[minIn.value].date} 至 ${rawHistory[maxIn.value].date}`;
+            if (!displayHistory.length) return;
+            const startDateObj = displayHistory[minIn.value];
+            const endDateObj = displayHistory[maxIn.value];
+
+            let sDate = startDateObj.date;
+            let eDate = endDateObj.date;
+            if (sDate.length === 7) sDate += "-01";
+            if (sDate.length === 4) sDate += "-01-01";
+            if (eDate.length === 7) eDate += "-01";
+            if (eDate.length === 4) eDate += "-01-01";
+
+            inputStartDate.value = toStandardDateStr(sDate);
+            inputEndDate.value = toStandardDateStr(eDate);
         }
 
-        // 根据筛选更新当前视图
         function updateView() {
+            if (!displayHistory.length) return;
             const startIdx = parseInt(document.getElementById('minRange').value);
             const endIdx = parseInt(document.getElementById('maxRange').value);
-            viewHistory = rawHistory.slice(startIdx, endIdx + 1);
+            
+            viewHistory = displayHistory.slice(startIdx, endIdx + 1);
             
             cursor = viewHistory.length - 1;
-            document.getElementById('progressRange').max = viewHistory.length - 1;
-            document.getElementById('dateStart').innerText = viewHistory[0].date;
-            document.getElementById('dateEnd').innerText = viewHistory[viewHistory.length-1].date;
+            document.getElementById('progressRange').max = Math.max(0, viewHistory.length - 1);
+            document.getElementById('dateStart').innerText = viewHistory[0]?.date || "";
+            document.getElementById('dateEnd').innerText = viewHistory[viewHistory.length-1]?.date || "";
+            
+            updateRangeUI(); 
             draw();
         }
+
+        function handleManualDateChange() {
+            toggle(false); 
+            
+            let startIdx = findClosestIndex(inputStartDate.value);
+            let endIdx = findClosestIndex(inputEndDate.value);
+
+            if (startIdx > endIdx) {
+                if (document.activeElement === inputStartDate) {
+                    endIdx = startIdx;
+                } else {
+                    startIdx = endIdx;
+                }
+            }
+
+            document.getElementById('minRange').value = startIdx;
+            document.getElementById('maxRange').value = endIdx;
+
+            updateRangeUI();
+            updateView();
+        }
+
+        inputStartDate.addEventListener('change', handleManualDateChange);
+        inputEndDate.addEventListener('change', handleManualDateChange);
 
         function draw() {
             if(viewHistory.length === 0) return;
@@ -254,7 +495,8 @@
             const w = canvas.width, h = canvas.height;
             ctx.clearRect(0, 0, w, h);
 
-            const padX = 60 * dpr, padY = 80 * dpr;
+            const padX = (window.innerWidth < 768 ? 20 : 50) * dpr;
+            const padY = (window.innerWidth < 768 ? 30 : 60) * dpr;
             const pw = w - padX * 2, ph = h - padY * 2;
 
             const vals = viewHistory.map(d => d.val);
@@ -262,11 +504,10 @@
             const min = Math.min(...vals, 0);
             const range = max - min;
 
-            const getX = (i) => padX + (i / (viewHistory.length - 1)) * pw;
+            const getX = (i) => padX + (viewHistory.length > 1 ? (i / (viewHistory.length - 1)) * pw : 0);
             const getY = (v) => h - padY - ((v - min) / (range || 1)) * ph;
             const zeroY = getY(0);
 
-            // 基准线
             ctx.beginPath();
             ctx.strokeStyle = 'rgba(255,255,255,0.1)';
             ctx.setLineDash([5*dpr, 5*dpr]);
@@ -280,7 +521,7 @@
                 ctx.clip();
 
                 ctx.beginPath();
-                ctx.lineWidth = 3 * dpr;
+                ctx.lineWidth = 2 * dpr;
                 ctx.strokeStyle = isPositive ? '#ef4444' : '#22c55e';
                 ctx.lineJoin = 'round';
                 
@@ -290,11 +531,10 @@
                 }
                 ctx.stroke();
 
-                // 渐变填充
                 ctx.lineTo(getX(cursor), zeroY); ctx.lineTo(getX(0), zeroY);
-                const g = ctx.createLinearGradient(0, isPositive ? zeroY - 100*dpr : zeroY, 0, isPositive ? zeroY : zeroY + 100*dpr);
-                if(isPositive) { g.addColorStop(0, 'rgba(239, 68, 68, 0.2)'); g.addColorStop(1, 'rgba(239, 68, 68, 0)'); }
-                else { g.addColorStop(0, 'rgba(34, 197, 94, 0)'); g.addColorStop(1, 'rgba(34, 197, 94, 0.2)'); }
+                const g = ctx.createLinearGradient(0, isPositive ? zeroY - 80*dpr : zeroY, 0, isPositive ? zeroY : zeroY + 80*dpr);
+                if(isPositive) { g.addColorStop(0, 'rgba(239, 68, 68, 0.15)'); g.addColorStop(1, 'rgba(239, 68, 68, 0)'); }
+                else { g.addColorStop(0, 'rgba(34, 197, 94, 0)'); g.addColorStop(1, 'rgba(34, 197, 94, 0.15)'); }
                 ctx.fillStyle = g; ctx.fill();
                 ctx.restore();
             }
@@ -304,26 +544,29 @@
 
             if (hoverIdx >= 0 && hoverIdx <= cursor) {
                 const hX = getX(hoverIdx), hY = getY(viewHistory[hoverIdx].val);
-                ctx.beginPath(); ctx.fillStyle = '#fff'; ctx.shadowBlur = 10 * dpr; ctx.shadowColor = '#fff';
-                ctx.arc(hX, hY, 5 * dpr, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+                ctx.beginPath(); ctx.fillStyle = '#fff'; ctx.shadowBlur = 8 * dpr; ctx.shadowColor = '#fff';
+                ctx.arc(hX, hY, 4 * dpr, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
             }
 
             const p = viewHistory[cursor];
-            document.getElementById('txtDate').innerText = p.date;
-            document.getElementById('txtWorth').innerText = `¥ ${p.val.toLocaleString(undefined, {minimumFractionDigits:2})}`;
-            document.getElementById('txtWorth').style.color = p.val >= 0 ? '#ef4444' : '#22c55e';
+            if(p) {
+                document.getElementById('txtDate').innerText = p.date;
+                
+                const startVal = viewHistory[0].val;
+                const diff = p.val - startVal;
+                const diffPrefix = diff >= 0 ? '+' : '';
+                
+                document.getElementById('txtWorth').innerText = `¥ ${p.val.toLocaleString(undefined, {minimumFractionDigits:2})}`;
+                document.getElementById('txtDiff').innerText = `${diffPrefix}${diff.toLocaleString(undefined, {minimumFractionDigits:2})}`;
+                
+                const themeColor = p.val >= 0 ? '#ef4444' : '#22c55e';
+                document.getElementById('txtWorth').style.color = themeColor;
+                document.getElementById('txtDiff').style.color = themeColor;
+            }
             
-            // 计算时段内涨跌幅
-            const startVal = viewHistory[0].val;
-            const diff = p.val - startVal;
-            const pct = startVal !== 0 ? (diff / Math.abs(startVal) * 100).toFixed(2) : "0.00";
-            document.getElementById('percentChange').innerText = `${diff >= 0 ? '↑' : '↓'} ${Math.abs(diff).toFixed(2)} (${pct}%)`;
-            document.getElementById('percentChange').style.color = diff >= 0 ? '#ef4444' : '#22c55e';
-
             document.getElementById('progressRange').value = cursor;
         }
 
-        // 交互逻辑
         function handleMove(e) {
             if(viewHistory.length === 0) return;
             const rect = canvas.getBoundingClientRect();
@@ -331,7 +574,8 @@
             const cy = e.touches ? e.touches[0].clientY : e.clientY;
             const x = cx - rect.left;
             const dpr = window.devicePixelRatio || 1;
-            const padX = 60 * dpr, pw = canvas.width - padX * 2;
+            const padX = (window.innerWidth < 768 ? 20 : 50) * dpr;
+            const pw = canvas.width - padX * 2;
             const idx = Math.round(((x * dpr) - padX) / pw * (viewHistory.length - 1));
 
             if(idx >= 0 && idx <= cursor) {
@@ -339,8 +583,8 @@
                 const p = viewHistory[idx];
                 const tip = document.getElementById('tooltip');
                 tip.style.display = 'block'; 
-                tip.style.left = Math.min(window.innerWidth - 120, cx - rect.left + 15) + 'px';
-                tip.style.top = (cy - rect.top - 50) + 'px';
+                tip.style.left = Math.min(window.innerWidth - 130, Math.max(10, cx - rect.left - 50)) + 'px';
+                tip.style.top = (cy - rect.top - 55) + 'px';
                 tip.innerText = `${p.date}\n¥${p.val.toLocaleString()}`;
                 draw();
             } else { hideTip(); }
@@ -348,15 +592,23 @@
 
         function hideTip() { hoverIdx = -1; document.getElementById('tooltip').style.display='none'; draw(); }
         container.addEventListener('mousemove', handleMove);
-        container.addEventListener('touchstart', handleMove);
+        container.addEventListener('touchstart', handleMove, {passive: true});
+        container.addEventListener('touchmove', handleMove, {passive: true});
         container.addEventListener('mouseleave', hideTip);
         container.addEventListener('touchend', hideTip);
 
-        // 自动演化
         function step() {
             if(!isPlaying) return;
-            const stepSize = Math.max(1, Math.ceil(viewHistory.length / 300));
+            const stepSize = Math.max(1, Math.ceil(viewHistory.length / 250));
             cursor = Math.min(cursor + stepSize, viewHistory.length - 1);
+            
+            // 【核心修正点 1】：在动画播放时，同步让上方的双滑块右节点（maxRange）跟随下方的进度光标
+            const minIn = document.getElementById('minRange');
+            const maxIn = document.getElementById('maxRange');
+            const baseStartIdx = parseInt(minIn.value);
+            maxIn.value = baseStartIdx + cursor;
+            updateRangeUI(); 
+
             draw();
             if(cursor < viewHistory.length - 1) requestAnimationFrame(step);
             else toggle(false);
@@ -368,24 +620,31 @@
             const icon = document.getElementById('playIcon');
             if(isPlaying) {
                 if(cursor >= viewHistory.length - 1) cursor = 0;
-                btn.className = "w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all";
+                btn.className = "w-10 h-10 md:w-12 md:h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all flex-shrink-0 z-20";
                 icon.innerHTML = '<path d="M6 4h4v12H6zM14 4h4v12h-4z"/>';
                 step();
             } else {
-                btn.className = "w-12 h-12 bg-white text-black rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all";
+                btn.className = "w-10 h-10 md:w-12 md:h-12 bg-white text-black rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all flex-shrink-0 z-20";
                 icon.innerHTML = '<path d="M4.5 3L15.5 10L4.5 17V3Z"/>';
             }
         }
 
-        // 按钮与范围控制
         document.getElementById('btnPlay').onclick = () => toggle();
+        
         document.getElementById('progressRange').oninput = (e) => {
             toggle(false);
             cursor = parseInt(e.target.value);
+            
+            // 【核心修正点 2】：当手动拖拽下方单条进度滑块时，同步反向更新上方的双坐标轴范围
+            const minIn = document.getElementById('minRange');
+            const maxIn = document.getElementById('maxRange');
+            const baseStartIdx = parseInt(minIn.value);
+            maxIn.value = baseStartIdx + cursor;
+            updateRangeUI(); 
+            
             draw();
         };
 
-        // 时间范围滑块事件
         const rangeInputs = document.querySelectorAll('.range-input input');
         rangeInputs.forEach(input => {
             input.oninput = () => {
